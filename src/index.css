@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-primary: #E04D60;
+}
+
+@layer base {
+  html {
+    @apply antialiased scroll-smooth;
+  }
+  
+  body {
+    @apply m-0 min-h-screen bg-white text-neutral-900 transition-colors duration-300;
+  }
+  
+  html.dark body {
+    @apply bg-neutral-950 text-white;
+  }
+}
