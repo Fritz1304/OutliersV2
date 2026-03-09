@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { useRef, useState, Suspense } from "react"
 import { Canvas } from "@react-three/fiber"
 import { Environment, Float, ContactShadows } from "@react-three/drei"
 import gsap from "gsap"
@@ -11,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 export default function Scene() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const droneGroupRef = useRef<THREE.Group>(null)
+  const [droneGroup, setDroneGroup] = useState<THREE.Group | null>(null)
   const text1Ref = useRef<HTMLDivElement>(null)
   const text2Ref = useRef<HTMLDivElement>(null)
 
@@ -20,10 +20,10 @@ export default function Scene() {
 
   useGSAP(() => {
     // Wait for refs to be ready
-    if (!containerRef.current || !droneGroupRef.current || !text1Ref.current || !text2Ref.current) return;
+    if (!containerRef.current || !droneGroup || !text1Ref.current || !text2Ref.current) return;
 
     const container = containerRef.current;
-    const drone = droneGroupRef.current;
+    const drone = droneGroup;
     const text1 = text1Ref.current;
     const text2 = text2Ref.current;
 
@@ -70,7 +70,7 @@ export default function Scene() {
       "-=0.5"
     )
 
-  }, { scope: containerRef })
+  }, { scope: containerRef, dependencies: [droneGroup] })
 
   return (
     <section ref={containerRef} className="relative w-full h-screen bg-white dark:bg-black overflow-hidden flex items-center transition-colors duration-300">
@@ -83,13 +83,15 @@ export default function Scene() {
           <Environment preset="city" />
 
           {/* Group wrapper to animate Drone with GSAP */}
-          <group ref={droneGroupRef}>
+          <group ref={setDroneGroup}>
             <Float
               speed={2} // Animation speed
               rotationIntensity={0.5} // xyz rotation intensity
               floatIntensity={0.8} // Up/down float intensity
             >
-              <Drone scale={DRONE_SCALE} />
+              <Suspense fallback={null}>
+                <Drone scale={DRONE_SCALE} />
+              </Suspense>
             </Float>
             {/* Optional Shadow */}
             <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={10} blur={2} far={4} />
