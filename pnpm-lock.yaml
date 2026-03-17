@@ -81,6 +81,9 @@ importers:
       vite:
         specifier: ^8.0.0-beta.13
         version: 8.0.0-beta.14(@types/node@24.10.13)(jiti@2.6.1)
+      vite-plugin-glsl:
+        specifier: ^1.5.6
+        version: 1.5.6(vite@8.0.0-beta.14(@types/node@24.10.13)(jiti@2.6.1))
 
 packages:
 
@@ -1423,6 +1426,19 @@ packages:
   utility-types@3.11.0:
     resolution: {integrity: sha512-6Z7Ma2aVEWisaL6TvBCy7P8rm2LQoPv6dJ7ecIaIixHcwfbJ0x7mWdbcwlIM5IGQxPZSFYeqRCqlOOeKoJYMkw==}
     engines: {node: '>= 4'}
+
+  vite-plugin-glsl@1.5.6:
+    resolution: {integrity: sha512-h3RfTiaI4cC8hICFZk5TBAAxmIuM0b/qkdrjYpqPtaL8bcxNEoEFXXdlISPGmDQ09eP0aJC8V2/BgTmPXspC8w==}
+    engines: {node: '>= 20.17.0', npm: '>= 10.8.3'}
+    peerDependencies:
+      '@rollup/pluginutils': ^5.x
+      esbuild: '>= 0.25'
+      vite: ^8.0.0-beta.13
+    peerDependenciesMeta:
+      '@rollup/pluginutils':
+        optional: true
+      esbuild:
+        optional: true
 
   vite@8.0.0-beta.14:
     resolution: {integrity: sha512-oLW66oi8tZcoxu6+1HFXb+5hLHco3OnEVu2Awmj5NqEo7vxaqybjBM0BXHcq+jAFhzkMGXJl8xcO5qDBczgKLg==}
@@ -2785,6 +2801,10 @@ snapshots:
       react: 19.2.4
 
   utility-types@3.11.0: {}
+
+  vite-plugin-glsl@1.5.6(vite@8.0.0-beta.14(@types/node@24.10.13)(jiti@2.6.1)):
+    dependencies:
+      vite: 8.0.0-beta.14(@types/node@24.10.13)(jiti@2.6.1)
 
   vite@8.0.0-beta.14(@types/node@24.10.13)(jiti@2.6.1):
     dependencies:
