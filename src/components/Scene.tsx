@@ -70,6 +70,13 @@ export default function Scene() {
       "-=0.5"
     )
 
+    // CRITICAL FIX: Because this timeline is created ASYNCHRONOUSLY when droneGroup state updates 
+    // (the 3D Canvas mounts later than DOM), we must force GSAP to refresh all triggers globally
+    // so any subsequent section (like ParticlesHorizontalScroll) recalculates its start position!
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 50);
+
   }, { scope: containerRef, dependencies: [droneGroup] })
 
   return (

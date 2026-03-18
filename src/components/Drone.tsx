@@ -14,7 +14,6 @@ export default function Drone({ scale = 0.5 }: DroneProps) {
   const { scene, animations } = useGLTF("/models/drone.glb")
 
   // 2. Usamos el hook useAnimations para controlar esas animaciones
-  // @ts-expect-error - There is a slight type mismatch between three and @types/three minor versions
   const { actions } = useAnimations(animations, droneRef)
 
   useEffect(() => {

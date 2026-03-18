@@ -4,8 +4,7 @@ import IntroLoader from './components/IntroLoader'
 import AboutUs from './components/AboutUs'
 import ContactUs from './components/ContactUs'
 import Scene from './components/Scene'
-import ParticlesSection from './components/ParticlesSection'
-
+import ParticlesHorizontalScroll from './components/ParticlesHorizontalScroll'
 
 function App() {
   return (
@@ -13,8 +12,8 @@ function App() {
       <Navbar />
       <IntroLoader />
       <AboutUs />
+      <ParticlesHorizontalScroll/>
       <Scene />
-      <ParticlesSection />
       <ContactUs />
     </div>
   )
