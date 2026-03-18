@@ -5,6 +5,7 @@ import glsl from 'vite-plugin-glsl'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base:"/OutliersV2/",
   plugins: [
     react(),
     tailwindcss(),
