@@ -11,7 +11,7 @@ export default function Drone({ scale = 0.5 }: DroneProps) {
   const droneRef = useRef<Group>(null)
 
   // 1. Extraemos las 'animations' junto con la escena
-  const { scene, animations } = useGLTF("/models/drone.glb")
+  const { scene, animations } = useGLTF(import.meta.env.BASE_URL + "models/drone.glb")
 
   // 2. Usamos el hook useAnimations para controlar esas animaciones
   const { actions } = useAnimations(animations, droneRef)
