@@ -32,7 +32,7 @@ const Particles = ({ scrollProgressRef }: { scrollProgressRef: RefObject<number>
     context.fillRect(0, 0, canvas.width, canvas.height);
     
     const glowImage = new Image();
-    glowImage.src = '/particles/glow.png'; // Must be in public/particles/
+    glowImage.src = import.meta.env.BASE_URL + 'particles/glow.png'; // Must be in public/particles/
     
     const texture = new THREE.CanvasTexture(canvas);
     
@@ -68,7 +68,7 @@ const Particles = ({ scrollProgressRef }: { scrollProgressRef: RefObject<number>
 
   const uniforms = useMemo(() => {
     const textureLoader = new THREE.TextureLoader();
-    const pictureTexture = textureLoader.load('/particles/LogoOutliers.jpg');
+    const pictureTexture = textureLoader.load(import.meta.env.BASE_URL + 'particles/LogoOutliers.jpg');
     
     return {
         uResolution: new THREE.Uniform(new THREE.Vector2(size.width * window.devicePixelRatio, size.height * window.devicePixelRatio)),
