@@ -8,7 +8,7 @@ export default function AboutUs() {
                 <img
                     src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=375,h=527,fit=crop/YBgbgaENKJcQgKM7/reel1-04-Yyv0vzK10qF4NP6j.jpg"
                     alt="Outliers Team"
-                    className="w-full max-w-[375px] h-auto object-cover rounded-xl shadow-2xl shadow-white/5 group-hover:shadow-white/20 transition-all duration-500"
+                    className="w-full max-w-93.75 h-auto object-cover rounded-xl shadow-2xl shadow-white/5 group-hover:shadow-white/20 transition-all duration-500"
                 />
             </div>
             <div className="space-y-6 text-gray-600 dark:text-gray-400 text-lg">
