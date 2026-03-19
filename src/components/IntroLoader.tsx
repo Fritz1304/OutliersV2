@@ -50,6 +50,9 @@ export default function IntroLoader() {
               end: "+=150%",
               pin: true,
               scrub: 1,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+              refreshPriority: 3,
             },
           });
 

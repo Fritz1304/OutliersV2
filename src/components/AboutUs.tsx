@@ -1,6 +1,6 @@
 export default function AboutUs() {
     return (
-<section id="about" className="reveal-section w-full pt-12 pb-24 px-4 bg-white dark:bg-black mt-8 md:-mt-[40vh] relative z-10 transition-colors duration-300">
+<section id="about" className="reveal-section w-full pt-12 pb-24 px-4 bg-white dark:bg-black mt-8 md:mt-0 relative z-10 transition-colors duration-300">
     <div className="max-w-5xl mx-auto">
        
         <div className="grid md:grid-cols-2 gap-12 items-center">

@@ -35,11 +35,14 @@ export default function Scene() {
         end: "+=300%", // 3 times window height of scrolling
         scrub: 1, // Smooth scrolling effect
         pin: true, // Pin the section while scrolling
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        refreshPriority: 1,
       }
     });
 
     // Initial States (Set basic hiding, GSAP handles the rest)
-    gsap.set(drone.position, { x: -6, y: -1, z: 2 })
+    gsap.set(drone.position, { x: -7, y: -1, z: 2 })
     gsap.set(drone.rotation, { x: 0.2, y: Math.PI / 4, z: -0.1 })
     
     // Esconder textos al inicio para evitar parpadeos
