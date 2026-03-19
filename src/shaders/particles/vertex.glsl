@@ -71,3 +71,4 @@ void main()
     if (isWhiteBg > 0.5 && luminance < 0.2) {
        vColor = vec3(1.0);
     }
+}
