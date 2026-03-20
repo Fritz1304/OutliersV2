@@ -4,15 +4,34 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function IntroLoader() {
+interface IntroLoaderProps {
+  onIntroReady?: () => void;
+}
+
+export default function IntroLoader({ onIntroReady }: IntroLoaderProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const overlayGroupRef = useRef<SVGGElement>(null);
   const whiteLayerRef = useRef<HTMLDivElement>(null);
+  const readyNotifiedRef = useRef(false);
 
   useLayoutEffect(() => {
     const mm = gsap.matchMedia();
 
     const ctx = gsap.context(() => {
+      gsap.set([".outliers-char", ".design-char"], {
+        autoAlpha: 0,
+        yPercent: 110,
+        force3D: true,
+        willChange: "transform, opacity",
+      });
+      gsap.set(overlayGroupRef.current, {
+        transformOrigin: "50% 45%",
+        willChange: "transform",
+      });
+      gsap.set(whiteLayerRef.current, {
+        willChange: "opacity",
+      });
+
       mm.add(
         {
           isDesktop: "(min-width: 768px)",
@@ -21,26 +40,37 @@ export default function IntroLoader() {
         (context) => {
           const { isDesktop } = context.conditions as { isDesktop: boolean };
 
-          const entranceTl = gsap.timeline();
+          const entranceTl = gsap.timeline({
+            defaults: {
+              ease: "power3.out",
+            },
+            onComplete: () => {
+              if (!readyNotifiedRef.current) {
+                readyNotifiedRef.current = true;
+                onIntroReady?.();
+              }
+            },
+          });
 
           entranceTl
-            .from(".outliers-char", {
-              opacity: 0,
-              y: 40,
-              duration: 1,
-              stagger: 0.05,
-              ease: "power3.out",
+            .to(".outliers-char", {
+              autoAlpha: 1,
+              yPercent: 0,
+              duration: 0.82,
+              stagger: 0.045,
+              clearProps: "willChange",
             })
-            .from(
+            .to(
               ".design-char",
               {
-                opacity: 0,
-                y: 20,
-                duration: 0.8,
+                autoAlpha: 1,
+                yPercent: 0,
+                duration: 0.7,
                 stagger: 0.03,
                 ease: "power2.out",
+                clearProps: "willChange",
               },
-              "-=0.5"
+              "-=0.42"
             );
 
           const tl = gsap.timeline({
@@ -59,7 +89,7 @@ export default function IntroLoader() {
           tl.to(overlayGroupRef.current, {
             scale: isDesktop ? 150 : 80,
             ease: "power2.inOut",
-            transformOrigin: "50% 45%",
+            force3D: true,
           }).to(
             whiteLayerRef.current,
             {
@@ -72,8 +102,11 @@ export default function IntroLoader() {
       );
     }, containerRef);
 
-    return () => ctx.revert();
-  }, []);
+    return () => {
+      ctx.revert();
+      mm.revert();
+    };
+  }, [onIntroReady]);
 
   const outliersX = [74, 96, 118, 139, 155, 171, 193, 215];
   const designX = [105, 124, 143, 159, 178, 198];

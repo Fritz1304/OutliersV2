@@ -15,8 +15,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 const PARTICLE_COUNT = 70000;
 const HOVER_ACTIVE_FROM_X = 0.12;
-const HOVER_WORLD_X_RANGE: [number, number] = [3.1, 7.35];
-const HOVER_WORLD_Y_RANGE: [number, number] = [-2.6, 2.6];
 const TEXT_FADE_RANGE = 0.23;
 const MORPH_WINDOW_START = 0.18;
 const MORPH_WINDOW_END = 0.78;
@@ -24,27 +22,6 @@ const MODEL_PATHS = {
   drone: `${import.meta.env.BASE_URL}models/drone.glb`,
   pencil: `${import.meta.env.BASE_URL}models/apple_pencil.glb`,
 } as const;
-
-const TARGETS = [
-  {
-    modelKey: 'drone',
-    position: new THREE.Vector3(5.2, 0.24, 0),
-    rotation: new THREE.Euler(-0.08, 0.5, 0.03),
-    scale: 4.65,
-  },
-  {
-    modelKey: 'pencil',
-    position: new THREE.Vector3(5.05, 0.02, 0.05),
-    rotation: new THREE.Euler(0.18, -1.08, 0.92),
-    scale: 5.7,
-  },
-  {
-    modelKey: 'drone',
-    position: new THREE.Vector3(5.28, 0.18, -0.06),
-    rotation: new THREE.Euler(0.04, 3.96, -0.08),
-    scale: 4.5,
-  },
-] as const;
 
 const COPY_BLOCKS = [
   {
@@ -100,6 +77,18 @@ type MorphState = {
   fluid: number;
 };
 
+type TargetConfig = {
+  modelKey: ModelKey;
+  position: THREE.Vector3;
+  rotation: THREE.Euler;
+  scale: number;
+};
+
+type HoverBounds = {
+  xRange: [number, number];
+  yRange: [number, number];
+};
+
 const clamp01 = (value: number) => THREE.MathUtils.clamp(value, 0, 1);
 
 const smoothstep = (value: number) => value * value * (3 - 2 * value);
@@ -111,16 +100,70 @@ const getTextVisibility = (index: number, progress: number) => {
   return smoothstep(visibility);
 };
 
-const getMorphState = (progress: number): MorphState => {
-  const segmentCount = TARGETS.length - 1;
+const getTargets = (isMobile: boolean): TargetConfig[] =>
+  isMobile
+    ? [
+        {
+          modelKey: 'drone',
+          position: new THREE.Vector3(2.15, -0.95, 0),
+          rotation: new THREE.Euler(-0.06, 0.35, 0.02),
+          scale: 3.35,
+        },
+        {
+          modelKey: 'pencil',
+          position: new THREE.Vector3(2.05, -1.1, 0.05),
+          rotation: new THREE.Euler(0.18, -1.08, 0.92),
+          scale: 4.05,
+        },
+        {
+          modelKey: 'drone',
+          position: new THREE.Vector3(2.2, -0.92, -0.05),
+          rotation: new THREE.Euler(0.03, 3.96, -0.08),
+          scale: 3.25,
+        },
+      ]
+    : [
+        {
+          modelKey: 'drone',
+          position: new THREE.Vector3(5.2, 0.24, 0),
+          rotation: new THREE.Euler(-0.08, 0.5, 0.03),
+          scale: 4.65,
+        },
+        {
+          modelKey: 'pencil',
+          position: new THREE.Vector3(5.05, 0.02, 0.05),
+          rotation: new THREE.Euler(0.18, -1.08, 0.92),
+          scale: 5.7,
+        },
+        {
+          modelKey: 'drone',
+          position: new THREE.Vector3(5.28, 0.18, -0.06),
+          rotation: new THREE.Euler(0.04, 3.96, -0.08),
+          scale: 4.5,
+        },
+      ];
+
+const getHoverBounds = (isMobile: boolean): HoverBounds =>
+  isMobile
+    ? {
+        xRange: [0.65, 3.7],
+        yRange: [-3.1, 1.4],
+      }
+    : {
+        xRange: [3.1, 7.35],
+        yRange: [-2.6, 2.6],
+      };
+
+const getMorphState = (progress: number, targetCount: number): MorphState => {
+  const segmentCount = targetCount - 1;
   if (segmentCount <= 0) {
     return { fromIndex: 0, toIndex: 0, mix: 0, fluid: 0 };
   }
 
   if (progress >= 1) {
     return {
-      fromIndex: TARGETS.length - 1,
-      toIndex: TARGETS.length - 1,
+      fromIndex: targetCount - 1,
+      toIndex: targetCount - 1,
       mix: 0,
       fluid: 0,
     };
@@ -302,7 +345,10 @@ const sampleModelCloud = (sourceScene: THREE.Object3D): ModelCloud => {
   };
 };
 
-const buildParticleData = (modelScenes: Record<ModelKey, THREE.Object3D>): ParticleData => {
+const buildParticleData = (
+  modelScenes: Record<ModelKey, THREE.Object3D>,
+  targets: TargetConfig[]
+): ParticleData => {
   const modelClouds = {
     drone: sampleModelCloud(modelScenes.drone),
     pencil: sampleModelCloud(modelScenes.pencil),
@@ -312,10 +358,10 @@ const buildParticleData = (modelScenes: Record<ModelKey, THREE.Object3D>): Parti
   const colors = new Float32Array(PARTICLE_COUNT * 3);
   const sizes = new Float32Array(PARTICLE_COUNT);
   const randoms = new Float32Array(PARTICLE_COUNT * 3);
-  const targetPositions = TARGETS.map(() => new Float32Array(PARTICLE_COUNT * 3));
-  const targetColors = TARGETS.map(() => new Float32Array(PARTICLE_COUNT * 3));
+  const targetPositions = targets.map(() => new Float32Array(PARTICLE_COUNT * 3));
+  const targetColors = targets.map(() => new Float32Array(PARTICLE_COUNT * 3));
 
-  TARGETS.forEach((target, targetIndex) => {
+  targets.forEach((target, targetIndex) => {
     const cloud = modelClouds[target.modelKey];
     const rotationMatrix = new THREE.Matrix4().makeRotationFromEuler(target.rotation);
     const scaleMatrix = new THREE.Matrix4().makeScale(target.scale, target.scale, target.scale);
@@ -373,10 +419,14 @@ const Particles = ({
   scrollProgressRef,
   hoverRef,
   modelScenes,
+  targets,
+  hoverBounds,
 }: {
   scrollProgressRef: RefObject<number>;
   hoverRef: RefObject<HoverState>;
   modelScenes: Record<ModelKey, THREE.Object3D>;
+  targets: TargetConfig[];
+  hoverBounds: HoverBounds;
 }) => {
   const { size } = useThree();
   const materialRef = useRef<THREE.ShaderMaterial>(null);
@@ -387,7 +437,7 @@ const Particles = ({
   const geometry = useMemo(() => new THREE.BufferGeometry(), []);
 
   useEffect(() => {
-    const data = buildParticleData(modelScenes);
+    const data = buildParticleData(modelScenes, targets);
     particleDataRef.current = data;
 
     geometry.setAttribute('position', new THREE.BufferAttribute(data.positions, 3));
@@ -399,7 +449,7 @@ const Particles = ({
     return () => {
       geometry.dispose();
     };
-  }, [geometry, modelScenes]);
+  }, [geometry, modelScenes, targets]);
 
   const uniforms = useMemo(
     () => ({
@@ -425,11 +475,11 @@ const Particles = ({
             hover.x,
             HOVER_ACTIVE_FROM_X,
             1,
-            HOVER_WORLD_X_RANGE[0],
-            HOVER_WORLD_X_RANGE[1]
+            hoverBounds.xRange[0],
+            hoverBounds.xRange[1]
           ),
-          HOVER_WORLD_X_RANGE[0],
-          HOVER_WORLD_X_RANGE[1]
+          hoverBounds.xRange[0],
+          hoverBounds.xRange[1]
         )
       : 999;
     const hoverTargetY = hoverShouldBeActive
@@ -438,11 +488,11 @@ const Particles = ({
             hover.y,
             -1,
             1,
-            HOVER_WORLD_Y_RANGE[0],
-            HOVER_WORLD_Y_RANGE[1]
+            hoverBounds.yRange[0],
+            hoverBounds.yRange[1]
           ),
-          HOVER_WORLD_Y_RANGE[0],
-          HOVER_WORLD_Y_RANGE[1]
+          hoverBounds.yRange[0],
+          hoverBounds.yRange[1]
         )
       : 999;
 
@@ -465,7 +515,7 @@ const Particles = ({
       delta
     );
 
-    const { fromIndex, toIndex, mix, fluid } = getMorphState(progress);
+    const { fromIndex, toIndex, mix, fluid } = getMorphState(progress, targets.length);
     const targetPositions = particleDataRef.current.targetPositions;
     const targetColors = particleDataRef.current.targetColors;
     const positionAttribute = geometry.getAttribute('position') as THREE.BufferAttribute;
@@ -582,6 +632,9 @@ export default function ParticlesHorizontalScroll() {
   const scrollWrapperRef = useRef<HTMLDivElement>(null);
   const scrollProgressRef = useRef(0);
   const hoverRef = useRef<HoverState>({ active: false, x: 999, y: 999 });
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  );
   const drone = useGLTF(MODEL_PATHS.drone);
   const pencil = useGLTF(MODEL_PATHS.pencil);
 
@@ -593,6 +646,21 @@ export default function ParticlesHorizontalScroll() {
       }) satisfies Record<ModelKey, THREE.Object3D>,
     [drone.scene, pencil.scene]
   );
+
+  const targets = useMemo(() => getTargets(isMobile), [isMobile]);
+  const hoverBounds = useMemo(() => getHoverBounds(isMobile), [isMobile]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const syncIsMobile = () => setIsMobile(mediaQuery.matches);
+
+    syncIsMobile();
+    mediaQuery.addEventListener('change', syncIsMobile);
+
+    return () => {
+      mediaQuery.removeEventListener('change', syncIsMobile);
+    };
+  }, []);
 
   useGSAP(
     () => {
@@ -661,32 +729,37 @@ export default function ParticlesHorizontalScroll() {
   return (
     <section
       ref={containerRef}
-      className="relative h-screen w-full overflow-hidden bg-[#181818]"
+      className="relative h-screen w-full overflow-hidden bg-white text-black transition-colors duration-300 dark:bg-neutral-950 dark:text-white"
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
     >
       <div className="absolute inset-0 z-0">
-        <Canvas camera={{ position: [0, 0, 18], fov: 35 }} dpr={[1, 2]}>
+        <Canvas
+          camera={{ position: isMobile ? [0, 0, 14] : [0, 0, 18], fov: isMobile ? 40 : 35 }}
+          dpr={[1, 2]}
+        >
           <Particles
             scrollProgressRef={scrollProgressRef}
             hoverRef={hoverRef}
             modelScenes={modelScenes}
+            targets={targets}
+            hoverBounds={hoverBounds}
           />
         </Canvas>
       </div>
 
-      <div className="pointer-events-none absolute inset-0 z-10 flex items-center px-10 md:px-24">
-        <div className="relative h-[260px] w-full max-w-xl md:h-[320px]">
+      <div className="pointer-events-none absolute inset-0 z-10 flex items-start px-5 pt-24 sm:px-8 md:items-center md:px-24 md:pt-0">
+        <div className="relative h-[230px] w-full max-w-sm sm:h-[250px] sm:max-w-md md:h-[320px] md:max-w-xl">
           {COPY_BLOCKS.map((copyBlock) => (
             <div
               key={copyBlock.title}
-              className="particles-copy absolute inset-0 flex flex-col justify-center text-white"
+              className="particles-copy absolute inset-0 flex flex-col justify-center"
               style={{ opacity: 0 }}
             >
-              <h2 className="mb-5 text-4xl font-bold uppercase tracking-tight md:text-7xl">
+              <h2 className="mb-4 text-3xl font-bold uppercase tracking-tight sm:text-4xl md:mb-5 md:text-7xl">
                 {copyBlock.title}
               </h2>
-              <p className="max-w-lg text-lg font-light leading-relaxed text-gray-400 md:text-xl">
+              <p className="max-w-sm text-base font-light leading-relaxed text-gray-600 sm:max-w-md sm:text-lg dark:text-gray-400 md:max-w-lg md:text-xl">
                 {copyBlock.body}
               </p>
             </div>

@@ -34,3 +34,5 @@ export default function Drone({ scale = 0.5 }: DroneProps) {
     />
   )
 }
+
+useGLTF.preload(import.meta.env.BASE_URL + "models/drone.glb")

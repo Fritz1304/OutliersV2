@@ -22,68 +22,77 @@ export default function Scene() {
     // Wait for refs to be ready
     if (!containerRef.current || !droneGroup || !text1Ref.current || !text2Ref.current) return;
 
-    const container = containerRef.current;
-    const drone = droneGroup;
-    const text1 = text1Ref.current;
-    const text2 = text2Ref.current;
+    const container = containerRef.current
+    const drone = droneGroup
+    const text1 = text1Ref.current
+    const text2 = text2Ref.current
+    const mm = gsap.matchMedia()
 
-    // Create a GSAP timeline synced with standard scroll
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: container,
-        start: "top top",
-        end: "+=300%", // 3 times window height of scrolling
-        scrub: 1, // Smooth scrolling effect
-        pin: true, // Pin the section while scrolling
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        refreshPriority: 1,
+    mm.add(
+      {
+        isDesktop: "(min-width: 768px)",
+        isMobile: "(max-width: 767px)",
+      },
+      (context) => {
+        const { isDesktop } = context.conditions as { isDesktop: boolean }
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: container,
+            start: "top top",
+            end: "+=300%",
+            scrub: 1,
+            pin: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            refreshPriority: 1,
+          }
+        })
+
+        gsap.set(drone.position, {
+          x: isDesktop ? -7 : -2.5,
+          y: isDesktop ? -1 : -0.75,
+          z: 2,
+        })
+        gsap.set(drone.rotation, { x: 0.2, y: Math.PI / 4, z: -0.1 })
+        gsap.set(text1, { opacity: 0 })
+        gsap.set(text2, { opacity: 0 })
+
+        tl.to(drone.position, { x: isDesktop ? -2 : -0.7, duration: 1 })
+          .to(drone.rotation, { y: Math.PI / 6, z: 0, duration: 1 }, "<")
+          .fromTo(
+            text1,
+            isDesktop ? { opacity: 0, x: 50 } : { opacity: 0, y: 28 },
+            isDesktop ? { opacity: 1, x: 0, duration: 1 } : { opacity: 1, y: 0, duration: 1 },
+            "<"
+          )
+          .to({}, { duration: 0.5 })
+          .to(
+            text1,
+            isDesktop ? { opacity: 0, x: 50, duration: 1 } : { opacity: 0, y: -28, duration: 1 }
+          )
+          .to(drone.position, { x: isDesktop ? 2 : 0.95, duration: 1.5 }, "<")
+          .to(drone.rotation, { y: Math.PI / 6 + Math.PI, z: 0.1, duration: 1.5 }, "<")
+          .fromTo(
+            text2,
+            isDesktop ? { opacity: 0, x: -50 } : { opacity: 0, y: 28 },
+            isDesktop ? { opacity: 1, x: 0, duration: 1 } : { opacity: 1, y: 0, duration: 1 },
+            "-=0.5"
+          )
+
+        setTimeout(() => {
+          ScrollTrigger.refresh();
+        }, 50);
       }
-    });
-
-    // Initial States (Set basic hiding, GSAP handles the rest)
-    gsap.set(drone.position, { x: -7, y: -1, z: 2 })
-    gsap.set(drone.rotation, { x: 0.2, y: Math.PI / 4, z: -0.1 })
-    
-    // Esconder textos al inicio para evitar parpadeos
-    gsap.set(text1, { opacity: 0 })
-    gsap.set(text2, { opacity: 0 })
-
-    // Frame 1: Drone moves in, Text 1 slides IN from right to center
-    tl.to(drone.position, { x: -2, duration: 1 })
-      .to(drone.rotation, { y: Math.PI / 6, z: 0, duration: 1 }, "<")
-      .fromTo(text1, 
-        { opacity: 0, x: 50 }, 
-        { opacity: 1, x: 0, duration: 1 }, 
-        "<"
-      ) 
-
-    // Frame 2: Hold a bit
-    tl.to({}, { duration: 0.5 }) 
-
-    // Frame 3: Text 1 slides OUT, Drone spins 360° horizontally while moving right
-    tl.to(text1, { opacity: 0, x: 50, duration: 1 }) 
-      .to(drone.position, { x: 2, duration: 1.5 }, "<")
-      .to(drone.rotation, { y: Math.PI / 6 + Math.PI, z: 0.1, duration: 1.5 }, "<") // Half horizontal spin
-
-    // Frame 4: Text 2 slides IN from left to center
-    tl.fromTo(text2, 
-      { opacity: 0, x: -50 }, 
-      { opacity: 1, x: 0, duration: 1 }, 
-      "-=0.5"
     )
 
-    // CRITICAL FIX: Because this timeline is created ASYNCHRONOUSLY when droneGroup state updates 
-    // (the 3D Canvas mounts later than DOM), we must force GSAP to refresh all triggers globally
-    // so any subsequent section (like ParticlesHorizontalScroll) recalculates its start position!
-    setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 50);
-
+    return () => {
+      mm.revert()
+    }
   }, { scope: containerRef, dependencies: [droneGroup] })
 
   return (
-    <section ref={containerRef} className="relative w-full h-screen bg-white dark:bg-black overflow-hidden flex items-center transition-colors duration-300">
+    <section ref={containerRef} className="relative flex h-screen w-full items-center overflow-hidden bg-white transition-colors duration-300 dark:bg-black">
 
       {/* 3D Canvas Context */}
       <div className="absolute inset-0 z-10 pointer-events-none">
@@ -111,27 +120,27 @@ export default function Scene() {
       </div>
 
       {/* HTML DOM Content overlay */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 pointer-events-none h-full">
+      <div className="relative z-20 mx-auto grid h-full w-full max-w-7xl grid-cols-1 px-4 sm:px-6 md:grid-cols-2 md:px-6 pointer-events-none">
         
         {/* Left Side (Text 2 will appear here) */}
-        <div className="flex flex-col justify-center h-full">
-          <div ref={text2Ref} className="text-black dark:text-white space-y-6 max-w-lg">
-            <h2 className="text-5xl md:text-7xl font-bold uppercase tracking-tight leading-tight">
+        <div className="flex h-full flex-col justify-start pt-24 md:justify-center md:pt-0">
+          <div ref={text2Ref} className="max-w-xs space-y-4 text-black dark:text-white sm:max-w-md md:max-w-lg md:space-y-6">
+            <h2 className="text-3xl font-bold uppercase leading-tight tracking-tight sm:text-4xl md:text-7xl">
               Tomas<br />Inmersivas
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 font-light">
+            <p className="text-base font-light text-gray-600 dark:text-gray-400 sm:text-lg md:text-xl">
               Llevamos tu contenido al siguiente nivel. Cobertura total en interiores y exteriores con drones FPV de alta velocidad que logran ángulos que parecen imposibles.
             </p>
           </div>
         </div>
 
         {/* Right Side (Text 1 will appear here) */}
-        <div className="flex flex-col justify-center items-end h-full">
-          <div ref={text1Ref} className="text-black dark:text-white space-y-6 max-w-lg text-right">
-            <h2 className="text-5xl md:text-7xl font-bold uppercase tracking-tight leading-tight">
+        <div className="flex h-full flex-col items-start justify-end pb-16 md:items-end md:justify-center md:pb-0">
+          <div ref={text1Ref} className="max-w-xs space-y-4 text-left text-black dark:text-white sm:max-w-md md:max-w-lg md:space-y-6 md:text-right">
+            <h2 className="text-3xl font-bold uppercase leading-tight tracking-tight sm:text-4xl md:text-7xl">
               Planos<br />Aéreos
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 font-light">
+            <p className="text-base font-light text-gray-600 dark:text-gray-400 sm:text-lg md:text-xl">
               Capturamos la acción desde el cielo. Nuestro servicio especializado de drones graba la esencia de cada movimiento, logrando perspectivas dinámicas para marcas que exigen máxima calidad.
             </p>
           </div>

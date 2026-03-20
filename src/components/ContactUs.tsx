@@ -91,18 +91,18 @@ export default function ContactUs() {
     };
 
     return (
-        <section id="contact" className="w-full pt-12 pb-24 px-4 bg-white dark:bg-black relative z-10 transition-colors duration-300">
-            <div className="max-w-5xl mx-auto">
-                <div className="text-center mb-16">
-                    <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">Contáctanos</h2>
-                    <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
+        <section id="contact" className="relative z-10 w-full bg-white px-4 pt-12 pb-20 transition-colors duration-300 dark:bg-black sm:px-6 md:pb-24">
+            <div className="mx-auto max-w-5xl">
+                <div className="mb-12 text-center md:mb-16">
+                    <h2 className="mb-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl">Contáctanos</h2>
+                    <p className="mx-auto max-w-2xl text-base text-gray-600 dark:text-gray-400 sm:text-lg">
                         ¿Listo para llevar tu proyecto al siguiente nivel? Escríbenos y hagamos algo increíble juntos.
                     </p>
                 </div>
                 
-                <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+                <div className="mx-auto grid max-w-3xl gap-6 md:grid-cols-2 md:gap-8">
                     {/* Address */}
-                    <div className="flex flex-col items-center p-8 bg-gray-50 dark:bg-neutral-900/50 rounded-2xl border border-gray-200 dark:border-white/5 hover:border-[rgb(224,77,96)]/30 dark:hover:border-white/10 dark:hover:bg-neutral-900/80 transition-all duration-300 group shadow-sm z-1">
+                    <div className="z-1 group flex flex-col items-center rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm transition-all duration-300 hover:border-[rgb(224,77,96)]/30 dark:border-white/5 dark:bg-neutral-900/50 dark:hover:border-white/10 dark:hover:bg-neutral-900/80 sm:p-8">
                         <div className="w-14 h-14 bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-[rgb(224,77,96)] group-hover:text-white dark:group-hover:bg-white/10 transition-all duration-300">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                         </div>
@@ -111,7 +111,7 @@ export default function ContactUs() {
                     </div>
 
                     {/* Phone */}
-                    <div className="flex flex-col items-center p-8 bg-gray-50 dark:bg-neutral-900/50 rounded-2xl border border-gray-200 dark:border-white/5 hover:border-[rgb(224,77,96)]/30 dark:hover:border-white/10 dark:hover:bg-neutral-900/80 transition-all duration-300 group shadow-sm z-1">
+                    <div className="z-1 group flex flex-col items-center rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm transition-all duration-300 hover:border-[rgb(224,77,96)]/30 dark:border-white/5 dark:bg-neutral-900/50 dark:hover:border-white/10 dark:hover:bg-neutral-900/80 sm:p-8">
                         <div className="w-14 h-14 bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-[rgb(224,77,96)] group-hover:text-white dark:group-hover:bg-white/10 transition-all duration-300">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                         </div>
@@ -121,7 +121,7 @@ export default function ContactUs() {
                 </div>
 
                 {/* Separator */}
-                <div className="flex items-center gap-4 mt-14 mb-2 z-1">
+                <div className="z-1 mt-12 mb-2 flex items-center gap-4 md:mt-14">
                     <div className="flex-1 h-px bg-linear-to-r from-transparent via-gray-300 dark:via-white/10 to-transparent" />
                     <span className="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
@@ -135,12 +135,12 @@ export default function ContactUs() {
                     action="https://formly.email/submit"
                     method="POST"
                     onSubmit={handleSubmit}
-                    className="relative bg-white dark:bg-neutral-900/50 border border-gray-200 dark:border-white/5 rounded-2xl p-8 md:p-12 shadow-lg hover:shadow-xl dark:shadow-[rgb(224,77,96)]/5 dark:hover:shadow-[rgb(224,77,96)]/10 transition-shadow duration-500 overflow-hidden min-h-112.5"
+                    className="relative min-h-[40rem] overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-lg transition-shadow duration-500 hover:shadow-xl dark:border-white/5 dark:bg-neutral-900/50 dark:shadow-[rgb(224,77,96)]/5 dark:hover:shadow-[rgb(224,77,96)]/10 sm:min-h-[42rem] md:p-12"
                 >
                     {/* Success Overlay state */}
                     <div 
                         ref={successRef} 
-                        className="absolute inset-0 hidden flex-col items-center justify-center p-8 bg-white dark:bg-neutral-900 z-20 text-center"
+                        className="absolute inset-0 z-20 hidden flex-col items-center justify-center bg-white p-6 text-center dark:bg-neutral-900 sm:p-8"
                     >
                         <div className="success-item w-20 h-20 bg-[rgb(224,77,96)]/10 dark:bg-[rgb(224,77,96)]/20 text-[rgb(224,77,96)] rounded-full flex items-center justify-center mb-6">
                             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
@@ -173,7 +173,7 @@ export default function ContactUs() {
                         autoComplete="off"
                     />
 
-                    <div className="grid md:grid-cols-2 gap-6">
+                    <div className="grid gap-6 md:grid-cols-2">
                         {/* Name */}
                         <div className="flex flex-col gap-2">
                             <label htmlFor="name" className="text-sm font-medium text-gray-600 dark:text-gray-400 tracking-wide">
