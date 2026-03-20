@@ -1,5 +1,6 @@
 import { Suspense, lazy, startTransition, useCallback, useEffect, useState } from 'react'
 import { useGLTF } from '@react-three/drei'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import './App.css'
 import Navbar from './components/Navbar'
 import IntroLoader from './components/IntroLoader'
@@ -58,6 +59,18 @@ function App() {
       window.cancelAnimationFrame(secondFrame)
     }
   }, [])
+
+  useEffect(() => {
+    if (!introReady || !heavySectionsReady) return
+
+    const refreshFrame = window.requestAnimationFrame(() => {
+      ScrollTrigger.refresh()
+    })
+
+    return () => {
+      window.cancelAnimationFrame(refreshFrame)
+    }
+  }, [introReady, heavySectionsReady])
 
   return (
     <div className="min-h-screen w-full bg-white text-black dark:bg-neutral-950 dark:text-white">

@@ -13,7 +13,7 @@ import fragmentShader from '../shaders/particles/fragment.glsl?raw';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const PARTICLE_COUNT = 70000;
+const PARTICLE_COUNT = 100000;
 const HOVER_ACTIVE_FROM_X = 0.12;
 const TEXT_FADE_RANGE = 0.23;
 const MORPH_WINDOW_START = 0.18;

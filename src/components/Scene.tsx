@@ -41,7 +41,7 @@ export default function Scene() {
             trigger: container,
             start: "top top",
             end: "+=300%",
-            scrub: 1,
+            scrub: 0.6,
             pin: true,
             anticipatePin: 1,
             invalidateOnRefresh: true,
@@ -79,10 +79,6 @@ export default function Scene() {
             isDesktop ? { opacity: 1, x: 0, duration: 1 } : { opacity: 1, y: 0, duration: 1 },
             "-=0.5"
           )
-
-        setTimeout(() => {
-          ScrollTrigger.refresh();
-        }, 50);
       }
     )
 
