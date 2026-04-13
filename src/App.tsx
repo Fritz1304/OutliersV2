@@ -115,11 +115,13 @@ function App() {
       <AboutUs />
       <Suspense
         fallback={
-          <SectionFallback
-            className="h-screen"
-            title="Cargando servicios"
-            copy="Estamos preparando el recorrido horizontal y las escenas 3D para que entren completas."
-          />
+          <div className="w-full h-screen">
+            <SectionFallback
+              className="h-screen"
+              title="Cargando servicios"
+              copy="Estamos preparando el recorrido horizontal y las escenas 3D para que entren completas."
+            />
+          </div>
         }
       >
         {heavySectionsReady ? (
@@ -127,17 +129,19 @@ function App() {
             <ServicesHorizontal />
             <Scene />
             <ServiceThree />
+            <PortFolio />
+            <ContactUs />
           </>
         ) : (
-          <SectionFallback
-            className="h-screen"
-            title="Cargando servicios"
-            copy="Estamos preparando el recorrido horizontal y las escenas 3D para que entren completas."
-          />
+          <div className="w-full h-[500vh]"> {/* Pre-calculamos espacio falso para evitar el salto brusco si el usuario hace scroll  */}
+            <SectionFallback
+              className="h-screen"
+              title="Cargando servicios"
+              copy="Estamos preparando el recorrido horizontal y las escenas 3D para que entren completas."
+            />
+          </div>
         )}        
       </Suspense>
-      <PortFolio />
-      <ContactUs />
     </div>
   )
 }
