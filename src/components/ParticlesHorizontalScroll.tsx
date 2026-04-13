@@ -13,7 +13,7 @@ import fragmentShader from '../shaders/particles/fragment.glsl?raw';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const PARTICLE_COUNT = 100000;
+const PARTICLE_COUNT = 42000;
 const HOVER_ACTIVE_FROM_X = 0.12;
 const TEXT_FADE_RANGE = 0.23;
 const MORPH_WINDOW_START = 0.18;
@@ -35,6 +35,10 @@ const COPY_BLOCKS = [
   {
     title: 'Drone Return',
     body: 'La nube vuelve a compactarse en el dron para dejar lista la seccion para futuros modelos.',
+  },
+  {
+    title: 'Pencil Finale',
+    body: 'El recorrido cierra con una nueva pose del pencil para abrir espacio a futuras transformaciones dentro de la misma narrativa.',
   },
 ] as const;
 
@@ -121,6 +125,12 @@ const getTargets = (isMobile: boolean): TargetConfig[] =>
           rotation: new THREE.Euler(0.03, 3.96, -0.08),
           scale: 3.25,
         },
+        {
+          modelKey: 'pencil',
+          position: new THREE.Vector3(2.35, -0.98, 0.08),
+          rotation: new THREE.Euler(-0.24, 0.55, 1.18),
+          scale: 4.2,
+        },
       ]
     : [
         {
@@ -140,6 +150,12 @@ const getTargets = (isMobile: boolean): TargetConfig[] =>
           position: new THREE.Vector3(5.28, 0.18, -0.06),
           rotation: new THREE.Euler(0.04, 3.96, -0.08),
           scale: 4.5,
+        },
+        {
+          modelKey: 'pencil',
+          position: new THREE.Vector3(5.42, -0.02, 0.1),
+          rotation: new THREE.Euler(-0.28, 0.62, 1.24),
+          scale: 5.95,
         },
       ];
 
@@ -433,23 +449,24 @@ const Particles = ({
   const particleDataRef = useRef<ParticleData | null>(null);
   const hoverPointRef = useRef(new THREE.Vector2(999, 999));
   const hoverStrengthRef = useRef(0);
-  const [isReady, setIsReady] = useState(false);
   const geometry = useMemo(() => new THREE.BufferGeometry(), []);
+  const particleData = useMemo(
+    () => buildParticleData(modelScenes, targets),
+    [modelScenes, targets]
+  );
 
   useEffect(() => {
-    const data = buildParticleData(modelScenes, targets);
-    particleDataRef.current = data;
+    particleDataRef.current = particleData;
 
-    geometry.setAttribute('position', new THREE.BufferAttribute(data.positions, 3));
-    geometry.setAttribute('color', new THREE.BufferAttribute(data.colors, 3));
-    geometry.setAttribute('aSize', new THREE.BufferAttribute(data.sizes, 1));
-    geometry.setAttribute('aRandom', new THREE.BufferAttribute(data.randoms, 3));
-    setIsReady(true);
+    geometry.setAttribute('position', new THREE.BufferAttribute(particleData.positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(particleData.colors, 3));
+    geometry.setAttribute('aSize', new THREE.BufferAttribute(particleData.sizes, 1));
+    geometry.setAttribute('aRandom', new THREE.BufferAttribute(particleData.randoms, 3));
 
     return () => {
       geometry.dispose();
     };
-  }, [geometry, modelScenes, targets]);
+  }, [geometry, particleData]);
 
   const uniforms = useMemo(
     () => ({
@@ -464,7 +481,7 @@ const Particles = ({
   );
 
   useFrame((_, delta) => {
-    if (!isReady || !particleDataRef.current) return;
+    if (!particleDataRef.current) return;
 
     const progress = clamp01(scrollProgressRef.current);
     const hover = hoverRef.current;
@@ -608,8 +625,6 @@ const Particles = ({
     }
   });
 
-  if (!isReady) return null;
-
   return (
     <points>
       <primitive object={geometry} attach="geometry" />
@@ -729,14 +744,15 @@ export default function ParticlesHorizontalScroll() {
   return (
     <section
       ref={containerRef}
-      className="relative h-screen w-full overflow-hidden bg-white text-black transition-colors duration-300 dark:bg-neutral-950 dark:text-white"
+      className="bg-page relative h-screen w-full overflow-hidden text-black transition-colors duration-300 dark:text-black"
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
     >
       <div className="absolute inset-0 z-0">
         <Canvas
           camera={{ position: isMobile ? [0, 0, 14] : [0, 0, 18], fov: isMobile ? 40 : 35 }}
-          dpr={[1, 2]}
+          dpr={[1, 1.35]}
+          gl={{ antialias: false, powerPreference: 'high-performance' }}
         >
           <Particles
             scrollProgressRef={scrollProgressRef}
@@ -759,7 +775,7 @@ export default function ParticlesHorizontalScroll() {
               <h2 className="mb-4 text-3xl font-bold uppercase tracking-tight sm:text-4xl md:mb-5 md:text-7xl">
                 {copyBlock.title}
               </h2>
-              <p className="max-w-sm text-base font-light leading-relaxed text-gray-600 sm:max-w-md sm:text-lg dark:text-gray-400 md:max-w-lg md:text-xl">
+              <p className="max-w-sm text-base font-light leading-relaxed text-gray-600 sm:max-w-md sm:text-lg dark:text-black/70 md:max-w-lg md:text-xl">
                 {copyBlock.body}
               </p>
             </div>

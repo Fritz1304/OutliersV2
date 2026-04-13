@@ -1,3 +1,4 @@
+// Esta clase fue creada para instanciar nuestro objeto Drone 3D
 import { useRef, useEffect } from "react"
 import { useGLTF, useAnimations } from "@react-three/drei"
 import { Group } from "three"

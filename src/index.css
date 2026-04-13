@@ -1,21 +1,149 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Sansita:wght@400;700;800&display=swap");
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
   --color-primary: #E04D60;
+  --color-page-dark: rgb(150, 163, 166);
+  --color-page-light: rgb(240, 239, 235);
+  --font-sans: "Montserrat", sans-serif;
+  --font-body: "Montserrat", sans-serif;
+  --font-subtitle: "Montserrat", sans-serif;
+  --font-title: "Sansita", cursive;
 }
 
 @layer base {
   html {
     @apply antialiased;
+
+    /* CONFIGURACION RAPIDA
+       Cambia estas variables para ajustar casi toda la apariencia general.
+       --page-bg-rgb: color base del fondo claro.
+       --glass-opacity: transparencia general de tarjetas, navbar y superficies.
+       --logo-color: color del logo del navbar.
+    */
+    --page-bg-rgb: 240, 239, 235;
+    --page-bg: rgb(var(--page-bg-rgb));
+    --surface-rgb: 255, 255, 255;
+    --surface-border-rgb: 17, 17, 17;
+    --glass-opacity: 0.46;
+    --glass-opacity-soft: calc(var(--glass-opacity) - 0.18);
+    --glass-opacity-strong: calc(var(--glass-opacity) + 0.18);
+    --glass-opacity-solid: calc(var(--glass-opacity) + 0.32);
+    --logo-color: #000000;
+  }
+
+  html.dark {
+    /* CONFIGURACION RAPIDA MODO OSCURO
+       --page-bg-rgb: fondo verde/gris del modo oscuro.
+    */
+    --page-bg-rgb: 150, 163, 166;
+    --page-bg: rgb(var(--page-bg-rgb));
+    --surface-rgb: 240, 239, 235;
+    --surface-border-rgb: 0, 0, 0;
+    --logo-color: #ffffff;
   }
   
   body {
-    @apply m-0 min-h-screen bg-white text-neutral-900 transition-colors duration-300;
+    @apply m-0 min-h-screen text-neutral-900 transition-colors duration-300;
+    background-color: var(--page-bg);
+    font-family: var(--font-body);
   }
   
   html.dark body {
-    @apply bg-neutral-950 text-white;
+    @apply text-black;
+  }
+
+  h1,
+  h2 {
+    font-family: var(--font-title);
+  }
+
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-subtitle);
+    font-weight: 700;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+}
+
+@layer utilities {
+  .bg-page {
+    background-color: var(--page-bg);
+  }
+
+  .bg-page-nav {
+    background-color: rgb(var(--surface-rgb) / var(--glass-opacity-strong));
+  }
+
+  .bg-page-nav-strong {
+    background-color: rgb(var(--surface-rgb) / var(--glass-opacity-solid));
+  }
+
+  .bg-page-fade-top {
+    background-image: linear-gradient(
+      to bottom,
+      rgb(var(--page-bg-rgb)) 0%,
+      rgb(var(--page-bg-rgb) / var(--glass-opacity-solid)) 58%,
+      transparent 100%
+    );
+  }
+
+  .bg-surface {
+    background-color: rgb(var(--surface-rgb) / var(--glass-opacity));
+  }
+
+  .bg-surface-soft {
+    background-color: rgb(var(--surface-rgb) / var(--glass-opacity-soft));
+  }
+
+  .bg-surface-strong {
+    background-color: rgb(var(--surface-rgb) / var(--glass-opacity-strong));
+  }
+
+  .bg-surface-solid {
+    background-color: rgb(var(--surface-rgb) / var(--glass-opacity-solid));
+  }
+
+  .hover-surface-strong:hover {
+    background-color: rgb(var(--surface-rgb) / var(--glass-opacity-strong));
+  }
+
+  .hover-surface-solid:hover {
+    background-color: rgb(var(--surface-rgb) / var(--glass-opacity-solid));
+  }
+
+  .border-surface {
+    border-color: rgb(var(--surface-border-rgb) / 0.12);
+  }
+
+  .border-surface-strong {
+    border-color: rgb(var(--surface-border-rgb) / 0.18);
+  }
+
+  .text-logo {
+    color: var(--logo-color);
+  }
+
+  .surface-chip {
+    border-color: rgb(var(--surface-border-rgb) / 0.1);
+    background-color: rgb(var(--surface-border-rgb) / 0.04);
+  }
+
+  .surface-gradient {
+    background-image: linear-gradient(
+      145deg,
+      rgb(var(--surface-rgb) / var(--glass-opacity-strong)),
+      rgb(var(--surface-rgb) / var(--glass-opacity-soft))
+    );
   }
 }

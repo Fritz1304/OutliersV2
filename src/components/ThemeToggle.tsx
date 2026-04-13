@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react';
 
 export default function ThemeToggle() {
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    // Check initial preference from localStorage or system preference during state initialization
+    // Default to dark mode unless the user already picked a theme
     const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    return savedTheme === 'dark' || (!savedTheme && prefersDark);
+    return savedTheme ? savedTheme === 'dark' : true;
   });
 
   useEffect(() => {
@@ -26,10 +25,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-full focus:outline-none transition-colors duration-300
-        bg-gray-200 text-gray-800 hover:bg-gray-300
-        dark:bg-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-700
-        flex items-center justify-center"
+      className="bg-surface-strong hover-surface-solid p-2 rounded-full focus:outline-none text-gray-800 dark:text-black transition-colors duration-300 flex items-center justify-center"
       aria-label="Toggle Dark Mode"
     >
       {isDarkMode ? (

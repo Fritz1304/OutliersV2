@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Montserrat", sans-serif;
+  --font-body: "Montserrat", sans-serif;
+  --font-subtitle: "Montserrat", sans-serif;
+  --font-title: "Sansita", cursive;
 }
 
 @layer utilities {
@@ -15,4 +17,3 @@
     perspective: 1000px;
   }
 }
-
