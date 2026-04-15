@@ -13,23 +13,40 @@ gsap.registerPlugin(ScrollTrigger, useGSAP)
 
 const SERVICES = [
   {
-    eyebrow: 'Servicio 01',
-    title: 'Branding y direccion creativa',
+    title: 'Brand Core',
+    slogan: 'BE AN OUTLIER',
     description:
-      'Aterrizamos la personalidad de tu marca en un sistema visual coherente, claro y listo para crecer.',
+      'Nucleo de la marca',
     bullets: [
       'Naming, concepto y narrativa de marca.',
-      'Identidad visual, piezas clave y lineamientos.',
-      'Campanas, redes y contenido con direccion estrategica.',
+      'Identidad visual, piezas clave y lineamientos.'
     ],
     notes: ['Brief creativo', 'Sistema visual', 'Lanzamiento'],
     visual: 'cards',
+    cards: [
+      {
+        title: 'Identidad',
+        body: 'Diseñamos marcas con personalidad clara, criterios visuales y una narrativa lista para sostenerse en el tiempo.',
+      },
+      {
+        title: 'Contenido',
+        body: 'Traducimos ideas en piezas para redes, campanas y puntos de contacto que si se sienten pensados para tu marca.',
+      },
+      {
+        title: 'Direccion',
+        body: 'Alineamos tono, arte y ejecucion para que cada entrega mantenga coherencia y proposito.',
+      },
+      {
+        title: 'Lanzamiento',
+        body: 'Preparamos el sistema visual para salir al mercado con materiales utiles desde el dia uno.',
+      },
+    ],
   },
   {
-    eyebrow: 'Servicio 02',
-    title: 'Service02',
+    title: 'Brand Visual',
+    slogan: 'Concepto, tinta y acción',
     description:
-      'Aterrizamos la personalidad de tu marca en un sistema visual coherente, claro y listo para crecer.',
+      'Identidad Visual',
     bullets: [
       'Naming, concepto y narrativa de marca.',
       'Identidad visual, piezas clave y lineamientos.',
@@ -37,10 +54,20 @@ const SERVICES = [
     ],
     notes: ['Brief creativo', 'Sistema visual', 'Lanzamiento'],
     visual: 'cards',
+    cards: [
+      {
+        title: 'Ejemplo 1',
+        body: 'Esta es una tarjeta independiente para el Servicio 02. Lista para ser modificada.',
+      },
+      {
+        title: 'Ejemplo 2',
+        body: 'Cada servicio ahora tiene sus propias tarjetas configurables desde el código.',
+      },
+    ],
   }
 ] as const
 
-type ServiceVisual = (typeof SERVICES)[number]['visual']
+type ServiceVisual = 'cards' | 'drone' | 'honeypot'
 
 function DroneRig() {
   const groupRef = useRef<Group>(null)
@@ -120,27 +147,12 @@ function ServiceCanvas({ visual }: { visual: Exclude<ServiceVisual, 'cards'> }) 
   )
 }
 
-function ServiceCards() {
+type CardProps = { title: string; body: string };
+
+function ServiceCards({ cards }: { cards: readonly CardProps[] }) {
   return (
     <div className="service-visual grid gap-4 sm:grid-cols-2">
-      {[
-        {
-          title: 'Identidad',
-          body: 'Diseñamos marcas con personalidad clara, criterios visuales y una narrativa lista para sostenerse en el tiempo.',
-        },
-        {
-          title: 'Contenido',
-          body: 'Traducimos ideas en piezas para redes, campanas y puntos de contacto que si se sienten pensados para tu marca.',
-        },
-        {
-          title: 'Direccion',
-          body: 'Alineamos tono, arte y ejecucion para que cada entrega mantenga coherencia y proposito.',
-        },
-        {
-          title: 'Lanzamiento',
-          body: 'Preparamos el sistema visual para salir al mercado con materiales utiles desde el dia uno.',
-        },
-      ].map((card) => (
+      {cards.map((card) => (
         <article
           key={card.title}
           className="rounded-[1.75rem] border border-black/10 bg-white/60 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.07)] backdrop-blur-sm transition-transform duration-300 hover:-translate-y-1 dark:border-black/10 dark:bg-white/45"
@@ -183,11 +195,16 @@ export default function ServicesHorizontal() {
       if (!container || !track) return
 
       const panels = gsap.utils.toArray<HTMLElement>('.service-panel', container)
+      const slogans = gsap.utils.toArray<HTMLElement>('.service-slogan', container)
 
       gsap.set('.service-copy, .service-visual, .service-note', {
         autoAlpha: 0,
         y: 28,
       })
+
+      // Hide all slogans except the first one initially
+      gsap.set(slogans, { autoAlpha: 0 })
+      if (slogans.length > 0) gsap.set(slogans[0], { autoAlpha: 1 })
 
       const horizontalTween = gsap.to(track, {
         x: () => -(track.scrollWidth - window.innerWidth),
@@ -280,6 +297,38 @@ export default function ServicesHorizontal() {
             }
           )
         }
+
+        // Animate the dynamically changing slogan in the top right header!
+        if (slogans.length > 0 && index > 0) {
+          // Fade out the previous slogan
+          gsap.to(slogans[index - 1], {
+            autoAlpha: 0,
+            y: -15,
+            scrollTrigger: {
+              trigger: panel,
+              containerAnimation: horizontalTween,
+              start: 'left 65%',
+              end: 'left 35%',
+              scrub: 1,
+            }
+          })
+          
+          // Fade in the new slogan
+          gsap.fromTo(slogans[index],
+            { autoAlpha: 0, y: 15 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              scrollTrigger: {
+                trigger: panel,
+                containerAnimation: horizontalTween,
+                start: 'left 65%',
+                end: 'left 35%',
+                scrub: 1,
+              }
+            }
+          )
+        }
       })
     },
     { scope: containerRef, dependencies: [isMobile], revertOnUpdate: true }
@@ -301,13 +350,17 @@ export default function ServicesHorizontal() {
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.34em] text-[rgb(224,77,96)]">
             Servicios
           </p>
-          <h2 className="max-w-xl text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
-            Lo que hacemos para mover tu marca
-          </h2>
         </div>
-        <p className="hidden max-w-sm text-sm leading-relaxed text-black/55 lg:block dark:text-black/65">
-          Desliza para recorrer tres frentes de trabajo conectados en una sola narrativa.
-        </p>
+        <div className="hidden relative flex-1 max-w-sm lg:block h-16">
+          {SERVICES.map((service) => (
+            <p 
+              key={service.title} 
+              className="service-slogan absolute right-0 top-0 w-full text-right text-sm leading-relaxed text-black/55 dark:text-black/65"
+            >
+              {service.slogan}
+            </p>
+          ))}
+        </div>
       </div>
 
       <div
@@ -322,9 +375,6 @@ export default function ServicesHorizontal() {
           >
             <div className="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(340px,1.1fr)] lg:items-center">
               <div className="service-copy max-w-2xl">
-                <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-black/45 dark:text-black/55">
-                  {service.eyebrow}
-                </p>
                 <h3 className="max-w-xl text-4xl font-bold uppercase leading-[0.95] tracking-tight sm:text-5xl lg:text-7xl">
                   {service.title}
                 </h3>
@@ -361,7 +411,11 @@ export default function ServicesHorizontal() {
               </div>
 
               <div className="relative">
-                {service.visual === 'cards' ? <ServiceCards /> : <ServiceCanvas visual={service.visual} />}
+                {service.visual === 'cards' ? (
+                  <ServiceCards cards={'cards' in service && service.cards ? service.cards : []} />
+                ) : (
+                  <ServiceCanvas visual={service.visual as Exclude<ServiceVisual, 'cards'>} />
+                )}
               </div>
             </div>
           </article>
