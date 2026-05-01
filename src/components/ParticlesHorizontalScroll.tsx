@@ -744,7 +744,7 @@ export default function ParticlesHorizontalScroll() {
   return (
     <section
       ref={containerRef}
-      className="bg-page relative h-screen w-full overflow-hidden text-black transition-colors duration-300 dark:text-black"
+      className="bg-page relative h-screen w-full overflow-hidden text-[rgb(240,239,235)] transition-colors duration-300"
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
     >
@@ -775,7 +775,7 @@ export default function ParticlesHorizontalScroll() {
               <h2 className="mb-4 text-3xl font-bold uppercase tracking-tight sm:text-4xl md:mb-5 md:text-7xl">
                 {copyBlock.title}
               </h2>
-              <p className="max-w-sm text-base font-light leading-relaxed text-gray-600 sm:max-w-md sm:text-lg dark:text-black/70 md:max-w-lg md:text-xl">
+              <p className="max-w-sm text-base font-light leading-relaxed text-[rgb(240,239,235)] sm:max-w-md sm:text-lg md:max-w-lg md:text-xl">
                 {copyBlock.body}
               </p>
             </div>

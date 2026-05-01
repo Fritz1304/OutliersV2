@@ -238,7 +238,7 @@ export default function ProjectsShowcase() {
     <section
       ref={sectionRef}
       id="portfolio"
-      className="bg-page relative overflow-hidden px-4 py-20 text-black transition-colors duration-300 dark:text-black sm:px-6 md:px-8 md:py-28"
+      className="bg-page relative overflow-hidden px-4 py-20 text-[rgb(240,239,235)] transition-colors duration-300 sm:px-6 md:px-8 md:py-28"
     >
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-black/12 to-transparent dark:via-white/12" />
@@ -252,7 +252,7 @@ export default function ProjectsShowcase() {
           <div className="max-w-3xl">
             <p
               data-project-intro
-              className="mb-4 text-xs font-semibold uppercase tracking-[0.35em] text-black/50 dark:text-black/55"
+              className="mb-4 text-xs font-semibold uppercase tracking-[0.35em] text-[rgb(240,239,235)]"
             >
               Proyectos Seleccionados
             </p>
@@ -265,7 +265,7 @@ export default function ProjectsShowcase() {
           </div>
 
           <div data-project-intro className="max-w-xl lg:justify-self-end">
-            <p className="text-base leading-relaxed text-black/65 dark:text-black/70 sm:text-lg">
+            <p className="text-base leading-relaxed text-[rgb(240,239,235)] sm:text-lg">
               Depuramos la experiencia para que el cambio de proyecto no dependa
               de rerenders durante el scroll. Ahora la seccion se mueve casi
               toda con GSAP sobre transform y opacidad.
@@ -341,7 +341,7 @@ export default function ProjectsShowcase() {
                   data-active={index === 0 ? "true" : "false"}
                   onMouseEnter={() => activateProjectRef.current(index)}
                   onFocus={() => activateProjectRef.current(index)}
-                  className="group text-left text-black/50 transition-colors duration-300 data-[active=true]:text-black dark:text-black/55 dark:data-[active=true]:text-black"
+                  className="group text-left text-[rgb(240,239,235)] transition-colors duration-300 data-[active=true]:text-[rgb(240,239,235)]"
                   aria-label={`Ver ${project.title}`}
                 >
                   <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.32em]">
@@ -380,7 +380,7 @@ export default function ProjectsShowcase() {
                   <div className="grid gap-5 lg:grid-cols-[auto_1fr] lg:gap-7">
                     <div className="flex items-start justify-between gap-4 lg:block">
                       <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-black/42 dark:text-black/48">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[rgb(240,239,235)]">
                           Proyecto 0{index + 1}
                         </p>
                         <h3 className="mt-2 text-2xl font-semibold tracking-tight sm:text-[2rem]">
@@ -392,7 +392,7 @@ export default function ProjectsShowcase() {
                         {project.services.map((service) => (
                           <span
                             key={service}
-                            className="surface-chip rounded-full border px-3 py-1 text-[11px] font-medium text-black/68 dark:text-black/75"
+                            className="surface-chip rounded-full border px-3 py-1 text-[11px] font-medium text-[rgb(240,239,235)]"
                           >
                             {service}
                           </span>
@@ -412,13 +412,13 @@ export default function ProjectsShowcase() {
                       </div>
 
                       <div className="flex flex-wrap items-center gap-3">
-                        <span className="surface-chip rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-black/65 dark:text-black/72">
+                        <span className="surface-chip rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[rgb(240,239,235)]">
                           {project.category}
                         </span>
-                        <span className="rounded-full border border-transparent px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-black/72 dark:text-black/72">
+                        <span className="rounded-full border border-transparent px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[rgb(240,239,235)]">
                           {project.year}
                         </span>
-                        <span className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-black/65 dark:text-black/68">
+                        <span className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-[rgb(240,239,235)]">
                           <span
                             className="h-2.5 w-2.5 rounded-full"
                             style={{ backgroundColor: project.accent }}
@@ -431,32 +431,32 @@ export default function ProjectsShowcase() {
                         {project.services.map((service) => (
                           <span
                             key={service}
-                            className="surface-chip rounded-full border px-3 py-1 text-[11px] font-medium text-black/68 dark:text-black/75"
+                            className="surface-chip rounded-full border px-3 py-1 text-[11px] font-medium text-[rgb(240,239,235)]"
                           >
                             {service}
                           </span>
                         ))}
                       </div>
 
-                      <p className="max-w-2xl text-base leading-relaxed text-black/68 dark:text-black/70 sm:text-[1.02rem]">
+                      <p className="max-w-2xl text-base leading-relaxed text-[rgb(240,239,235)] sm:text-[1.02rem]">
                         {project.summary}
                       </p>
 
                       <div className="grid gap-3 sm:grid-cols-2">
                         <div className="border-surface bg-surface-strong rounded-[1.35rem] border p-4">
-                          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-black/42 dark:text-black/48">
+                          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-[rgb(240,239,235)]">
                             Entregables
                           </p>
-                          <p className="text-sm leading-relaxed text-black/72 dark:text-black/72">
+                          <p className="text-sm leading-relaxed text-[rgb(240,239,235)]">
                             {project.deliverables}
                           </p>
                         </div>
 
                         <div className="border-surface bg-surface-strong rounded-[1.35rem] border p-4">
-                          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-black/42 dark:text-black/48">
+                          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-[rgb(240,239,235)]">
                             Enfoque
                           </p>
-                          <p className="text-sm leading-relaxed text-black/72 dark:text-black/72">
+                          <p className="text-sm leading-relaxed text-[rgb(240,239,235)]">
                             {project.focus}
                           </p>
                         </div>

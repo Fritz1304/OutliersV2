@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { ContactShadows, Environment, Float } from '@react-three/drei'
 import { useGSAP } from '@gsap/react'
@@ -69,6 +69,26 @@ const SERVICES = [
 
 type ServiceVisual = 'cards' | 'drone' | 'honeypot'
 
+const hiddenRevealStyle = {
+  opacity: 0,
+  transform: 'translate3d(0, 28px, 0)',
+} as const
+
+const hiddenVisualStyle = {
+  opacity: 0,
+  transform: 'translate3d(0, 24px, 0) scale(0.94)',
+} as const
+
+const hiddenNoteStyle = {
+  opacity: 0,
+  transform: 'translate3d(0, 18px, 0)',
+} as const
+
+const hiddenSloganStyle = {
+  opacity: 0,
+  transform: 'translate3d(0, 15px, 0)',
+} as const
+
 function DroneRig() {
   const groupRef = useRef<Group>(null)
 
@@ -119,7 +139,13 @@ function HoneyPotRig() {
   )
 }
 
-function ServiceCanvas({ visual }: { visual: Exclude<ServiceVisual, 'cards'> }) {
+function ServiceCanvas({
+  visual,
+  style,
+}: {
+  visual: Exclude<ServiceVisual, 'cards'>
+  style?: CSSProperties
+}) {
   const camera = useMemo(
     () =>
       visual === 'drone'
@@ -129,7 +155,10 @@ function ServiceCanvas({ visual }: { visual: Exclude<ServiceVisual, 'cards'> }) 
   )
 
   return (
-    <div className="service-visual relative h-[320px] w-full overflow-hidden rounded-[2rem] border border-black/10 bg-white/55 shadow-[0_18px_80px_rgba(0,0,0,0.08)] backdrop-blur-sm sm:h-[380px] lg:h-[460px] dark:border-black/10 dark:bg-white/45">
+    <div
+      className="service-visual relative h-[320px] w-full overflow-hidden rounded-[2rem] border border-black/10 bg-white/55 shadow-[0_18px_80px_rgba(0,0,0,0.08)] backdrop-blur-sm sm:h-[380px] lg:h-[460px] dark:border-black/10 dark:bg-white/45"
+      style={style}
+    >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(224,77,96,0.18),_transparent_42%),radial-gradient(circle_at_80%_80%,_rgba(0,0,0,0.06),_transparent_36%)]" />
       <Canvas
         camera={camera}
@@ -147,11 +176,17 @@ function ServiceCanvas({ visual }: { visual: Exclude<ServiceVisual, 'cards'> }) 
   )
 }
 
-type CardProps = { title: string; body: string };
+type CardProps = { title: string; body: string }
 
-function ServiceCards({ cards }: { cards: readonly CardProps[] }) {
+function ServiceCards({
+  cards,
+  style,
+}: {
+  cards: readonly CardProps[]
+  style?: CSSProperties
+}) {
   return (
-    <div className="service-visual grid gap-4 sm:grid-cols-2">
+    <div className="service-visual grid gap-4 sm:grid-cols-2" style={style}>
       {cards.map((card) => (
         <article
           key={card.title}
@@ -160,7 +195,7 @@ function ServiceCards({ cards }: { cards: readonly CardProps[] }) {
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.28em] text-[rgb(224,77,96)]">
             {card.title}
           </p>
-          <p className="text-sm leading-relaxed text-black/65 sm:text-base dark:text-black/70">
+          <p className="text-sm leading-relaxed text-[rgb(240,239,235)] sm:text-base">
             {card.body}
           </p>
         </article>
@@ -170,6 +205,7 @@ function ServiceCards({ cards }: { cards: readonly CardProps[] }) {
 }
 
 export default function ServicesHorizontal() {
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const [isMobile, setIsMobile] = useState(() =>
@@ -191,31 +227,21 @@ export default function ServicesHorizontal() {
   useGSAP(
     () => {
       const container = containerRef.current
+      const wrapper = wrapperRef.current
       const track = trackRef.current
-      if (!container || !track) return
+      if (!container || !wrapper || !track) return
 
       const panels = gsap.utils.toArray<HTMLElement>('.service-panel', container)
       const slogans = gsap.utils.toArray<HTMLElement>('.service-slogan', container)
-
-      gsap.set('.service-copy, .service-visual, .service-note', {
-        autoAlpha: 0,
-        y: 28,
-      })
-
-      // Hide all slogans except the first one initially
-      gsap.set(slogans, { autoAlpha: 0 })
-      if (slogans.length > 0) gsap.set(slogans[0], { autoAlpha: 1 })
 
       const horizontalTween = gsap.to(track, {
         x: () => -(track.scrollWidth - window.innerWidth),
         ease: 'none',
         scrollTrigger: {
-          trigger: container,
+          trigger: wrapper,
           start: 'top top',
-          end: () => `+=${track.scrollWidth - window.innerWidth}`,
-          pin: true,
+          end: 'bottom bottom',
           scrub: 1,
-          anticipatePin: 1,
           invalidateOnRefresh: true,
           refreshPriority: 2,
         },
@@ -335,92 +361,109 @@ export default function ServicesHorizontal() {
   )
 
   return (
-    <section
-      id="services"
-      ref={containerRef}
-      className="bg-page relative h-screen w-full overflow-hidden text-black transition-colors duration-300 dark:text-black"
+    <div
+      ref={wrapperRef}
+      className="relative w-full"
+      style={{ minHeight: `calc(100vh + ${(SERVICES.length - 1) * 100}vw)` }}
     >
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[6%] top-20 h-40 w-40 rounded-full bg-[rgb(224,77,96)]/10 blur-3xl" />
-        <div className="absolute bottom-16 right-[8%] h-48 w-48 rounded-full bg-black/6 blur-3xl dark:bg-black/5" />
-      </div>
-
-      <div className="pointer-events-none absolute left-0 right-0 top-0 z-20 mx-auto flex w-full max-w-7xl items-start justify-between px-4 pt-20 sm:px-6 md:px-8 lg:px-10">
-        <div>
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.34em] text-[rgb(224,77,96)]">
-            Servicios
-          </p>
-        </div>
-        <div className="hidden relative flex-1 max-w-sm lg:block h-16">
-          {SERVICES.map((service) => (
-            <p 
-              key={service.title} 
-              className="service-slogan absolute right-0 top-0 w-full text-right text-sm leading-relaxed text-black/55 dark:text-black/65"
-            >
-              {service.slogan}
-            </p>
-          ))}
-        </div>
-      </div>
-
-      <div
-        ref={trackRef}
-        className="relative flex h-full"
-        style={{ width: `${SERVICES.length * 100}vw` }}
+      <section
+        id="services"
+        ref={containerRef}
+        className="bg-page sticky top-0 relative h-screen w-full overflow-hidden text-[rgb(240,239,235)] transition-colors duration-300"
       >
-        {SERVICES.map((service, index) => (
-          <article
-            key={service.title}
-            className="service-panel relative flex h-full w-screen shrink-0 items-center px-4 pb-10 pt-28 sm:px-6 md:px-8 md:pt-32 lg:px-10"
-          >
-            <div className="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(340px,1.1fr)] lg:items-center">
-              <div className="service-copy max-w-2xl">
-                <h3 className="max-w-xl text-4xl font-bold uppercase leading-[0.95] tracking-tight sm:text-5xl lg:text-7xl">
-                  {service.title}
-                </h3>
-                <p className="mt-5 max-w-xl text-base leading-relaxed text-black/65 sm:text-lg dark:text-black/70">
-                  {service.description}
-                </p>
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute left-[6%] top-20 h-40 w-40 rounded-full bg-[rgb(224,77,96)]/10 blur-3xl" />
+          <div className="absolute bottom-16 right-[8%] h-48 w-48 rounded-full bg-black/6 blur-3xl dark:bg-black/5" />
+        </div>
 
-                <div className="mt-7 flex flex-wrap gap-3">
-                  {service.notes.map((note) => (
-                    <span
-                      key={note}
-                      className="service-note rounded-full border border-black/10 bg-white/55 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-black/60 backdrop-blur-sm dark:border-black/10 dark:bg-white/45 dark:text-black/65"
-                    >
-                      {note}
-                    </span>
-                  ))}
+        <div className="pointer-events-none absolute left-0 right-0 top-0 z-20 mx-auto flex w-full max-w-7xl items-start justify-between px-4 pt-20 sm:px-6 md:px-8 lg:px-10">
+          <div>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.34em] text-[rgb(224,77,96)]">
+              Servicios
+            </p>
+          </div>
+          <div className="hidden relative flex-1 max-w-sm lg:block h-16">
+            {SERVICES.map((service, index) => (
+              <p 
+                key={service.title} 
+                className="service-slogan absolute right-0 top-0 w-full text-right text-sm leading-relaxed text-[rgb(240,239,235)]"
+                style={index === 0 ? undefined : hiddenSloganStyle}
+              >
+                {service.slogan}
+              </p>
+            ))}
+          </div>
+        </div>
+
+        <div
+          ref={trackRef}
+          className="relative flex h-full will-change-transform"
+          style={{ width: `${SERVICES.length * 100}vw` }}
+        >
+          {SERVICES.map((service, index) => (
+            <article
+              key={service.title}
+              className="service-panel relative flex h-full w-screen shrink-0 items-center px-4 pb-10 pt-28 sm:px-6 md:px-8 md:pt-32 lg:px-10"
+            >
+              <div className="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(340px,1.1fr)] lg:items-center">
+                <div
+                  className="service-copy max-w-2xl"
+                  style={index === 0 ? undefined : hiddenRevealStyle}
+                >
+                  <h3 className="max-w-xl text-4xl font-bold uppercase leading-[0.95] tracking-tight sm:text-5xl lg:text-7xl">
+                    {service.title}
+                  </h3>
+                  <p className="mt-5 max-w-xl text-base leading-relaxed text-[rgb(240,239,235)] sm:text-lg">
+                    {service.description}
+                  </p>
+
+                  <div className="mt-7 flex flex-wrap gap-3">
+                    {service.notes.map((note) => (
+                      <span
+                        key={note}
+                        className="service-note rounded-full border border-black/10 bg-white/55 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[rgb(240,239,235)] backdrop-blur-sm dark:border-black/10 dark:bg-white/45"
+                        style={index === 0 ? undefined : hiddenNoteStyle}
+                      >
+                        {note}
+                      </span>
+                    ))}
+                  </div>
+
+                  <ul className="mt-8 space-y-4">
+                    {service.bullets.map((bullet, bulletIndex) => (
+                      <li
+                        key={bullet}
+                        className="flex items-start gap-4 rounded-[1.5rem] border border-black/8 bg-white/45 px-5 py-4 backdrop-blur-sm dark:border-black/8 dark:bg-white/35"
+                      >
+                        <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[rgb(224,77,96)] text-xs font-bold text-white">
+                          {index + 1}.{bulletIndex + 1}
+                        </span>
+                        <span className="text-sm leading-relaxed text-[rgb(240,239,235)] sm:text-base">
+                          {bullet}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                <ul className="mt-8 space-y-4">
-                  {service.bullets.map((bullet, bulletIndex) => (
-                    <li
-                      key={bullet}
-                      className="flex items-start gap-4 rounded-[1.5rem] border border-black/8 bg-white/45 px-5 py-4 backdrop-blur-sm dark:border-black/8 dark:bg-white/35"
-                    >
-                      <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[rgb(224,77,96)] text-xs font-bold text-white">
-                        {index + 1}.{bulletIndex + 1}
-                      </span>
-                      <span className="text-sm leading-relaxed text-black/68 sm:text-base dark:text-black/72">
-                        {bullet}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                <div className="relative">
+                  {service.visual === 'cards' ? (
+                    <ServiceCards
+                      cards={'cards' in service && service.cards ? service.cards : []}
+                      style={index === 0 ? undefined : hiddenVisualStyle}
+                    />
+                  ) : (
+                    <ServiceCanvas
+                      visual={service.visual as Exclude<ServiceVisual, 'cards'>}
+                      style={index === 0 ? undefined : hiddenVisualStyle}
+                    />
+                  )}
+                </div>
               </div>
-
-              <div className="relative">
-                {service.visual === 'cards' ? (
-                  <ServiceCards cards={'cards' in service && service.cards ? service.cards : []} />
-                ) : (
-                  <ServiceCanvas visual={service.visual as Exclude<ServiceVisual, 'cards'>} />
-                )}
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
   )
 }

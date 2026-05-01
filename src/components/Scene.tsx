@@ -11,6 +11,7 @@ import * as THREE from "three"
 gsap.registerPlugin(ScrollTrigger)
 
 export default function Scene() {
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [droneGroup, setDroneGroup] = useState<THREE.Group | null>(null)
   const text1Ref = useRef<HTMLDivElement>(null)
@@ -21,9 +22,9 @@ export default function Scene() {
 
   useGSAP(() => {
     // Wait for refs to be ready
-    if (!containerRef.current || !droneGroup || !text1Ref.current || !text2Ref.current) return;
+    if (!wrapperRef.current || !containerRef.current || !droneGroup || !text1Ref.current || !text2Ref.current) return
 
-    const container = containerRef.current
+    const wrapper = wrapperRef.current
     const drone = droneGroup
     const text1 = text1Ref.current
     const text2 = text2Ref.current
@@ -39,12 +40,10 @@ export default function Scene() {
 
         const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: container,
+            trigger: wrapper,
             start: "top top",
-            end: "+=300%",
+            end: "bottom bottom",
             scrub: 0.6,
-            pin: true,
-            anticipatePin: 1,
             invalidateOnRefresh: true,
             refreshPriority: 1,
           }
@@ -88,7 +87,8 @@ export default function Scene() {
   }, { scope: containerRef, dependencies: [droneGroup] })
 
   return (
-    <section ref={containerRef} className="bg-page relative flex h-screen w-full items-center overflow-hidden transition-colors duration-300">
+    <div ref={wrapperRef} className="relative h-[400vh] w-full">
+      <section ref={containerRef} className="bg-page sticky top-0 relative flex h-screen w-full items-center overflow-hidden transition-colors duration-300">
 
       {/* 3D Canvas Context */}
       <div className="absolute inset-0 z-10 pointer-events-none">
@@ -124,11 +124,11 @@ export default function Scene() {
         
         {/* Left Side (Text 2 will appear here) */}
         <div className="flex h-full flex-col justify-start pt-24 md:justify-center md:pt-0">
-          <div ref={text2Ref} className="max-w-xs space-y-4 text-black dark:text-black sm:max-w-md md:max-w-lg md:space-y-6">
+          <div ref={text2Ref} className="max-w-xs space-y-4 text-[rgb(240,239,235)] sm:max-w-md md:max-w-lg md:space-y-6">
             <h2 className="text-3xl font-bold uppercase leading-tight tracking-tight sm:text-4xl md:text-7xl">
               Tomas<br />Inmersivas
             </h2>
-            <p className="text-base font-light text-gray-600 dark:text-black/70 sm:text-lg md:text-xl">
+            <p className="text-base font-light text-[rgb(240,239,235)] sm:text-lg md:text-xl">
               Llevamos tu contenido al siguiente nivel. Cobertura total en interiores y exteriores con drones FPV de alta velocidad que logran ángulos que parecen imposibles.
             </p>
           </div>
@@ -136,17 +136,18 @@ export default function Scene() {
 
         {/* Right Side (Text 1 will appear here) */}
         <div className="flex h-full flex-col items-start justify-end pb-16 md:items-end md:justify-center md:pb-0">
-          <div ref={text1Ref} className="max-w-xs space-y-4 text-left text-black dark:text-black sm:max-w-md md:max-w-lg md:space-y-6 md:text-right">
+          <div ref={text1Ref} className="max-w-xs space-y-4 text-left text-[rgb(240,239,235)] sm:max-w-md md:max-w-lg md:space-y-6 md:text-right">
             <h2 className="text-3xl font-bold uppercase leading-tight tracking-tight sm:text-4xl md:text-7xl">
               Planos<br />Aéreos
             </h2>
-            <p className="text-base font-light text-gray-600 dark:text-black/70 sm:text-lg md:text-xl">
+            <p className="text-base font-light text-[rgb(240,239,235)] sm:text-lg md:text-xl">
               Capturamos la acción desde el cielo. Nuestro servicio especializado de drones graba la esencia de cada movimiento, logrando perspectivas dinámicas para marcas que exigen máxima calidad.
             </p>
           </div>
         </div>
 
       </div>
-    </section>
+      </section>
+    </div>
   )
 }

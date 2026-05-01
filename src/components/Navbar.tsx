@@ -33,7 +33,7 @@ export default function Navbar() {
                 <a
                   key={item.title}
                   href={item.href}
-                  className="text-gray-600 dark:text-black/75 hover:text-black dark:hover:text-black px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                  className="px-3 py-2 text-sm font-medium text-[rgb(240,239,235)] transition-colors duration-200 hover:text-[rgb(240,239,235)] rounded-md"
                 >
                   {item.title}
                 </a>
@@ -50,7 +50,7 @@ export default function Navbar() {
             <button
               onClick={toggleMenu}
               type="button"
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-black hover:bg-gray-100 dark:text-black/70 dark:hover:text-black dark:hover:bg-black/8 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-[rgb(150,163,166)] focus:ring-[rgb(224,77,96)] transition-all"
+              className="inline-flex items-center justify-center rounded-md p-2 text-[rgb(240,239,235)] transition-all hover:bg-white/10 hover:text-[rgb(240,239,235)] focus:outline-none focus:ring-2 focus:ring-[rgb(224,77,96)] focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-[rgb(150,163,166)]"
               aria-controls="mobile-menu"
               aria-expanded={isOpen}
             >
@@ -102,7 +102,7 @@ export default function Navbar() {
                 key={item.title}
                 href={item.href}
                 onClick={toggleMenu}
-                className="text-gray-700 dark:text-black/80 hover:text-[rgb(224,77,96)] dark:hover:text-black block px-3 py-2 rounded-md text-base font-medium transition-colors"
+                className="block rounded-md px-3 py-2 text-base font-medium text-[rgb(240,239,235)] transition-colors hover:text-[rgb(224,77,96)]"
               >
                 {item.title}
               </a>

@@ -67,7 +67,7 @@ export default function ServiceThree() {
   }
 
   return (
-    <section className="bg-page relative w-full overflow-hidden text-black transition-colors duration-300 dark:text-black mt-20 md:mt-0 py-20 px-4 sm:px-6 md:px-8 lg:px-10">
+    <section className="bg-page relative mt-20 w-full overflow-hidden px-4 py-20 text-[rgb(240,239,235)] transition-colors duration-300 sm:px-6 md:mt-0 md:px-8 lg:px-10">
       
       {/* Background Orbs */}
       <div className="pointer-events-none absolute inset-0">
@@ -105,7 +105,7 @@ export default function ServiceThree() {
         </p> */}
        <div className="absolute top-10 right-10 z-20">
         <div className="relative bg-[rgb(224,88,108)] px-5 py-2 rounded-xl shadow-lg">
-          <p className="text-lg text-black italic tracking-wide">
+          <p className="text-lg italic tracking-wide text-[rgb(240,239,235)]">
             {service.slogan}
           </p>
           <div className="absolute -bottom-2 right-6 w-4 h-4 bg-[rgb(224,88,108)] rotate-45"></div>
@@ -118,7 +118,7 @@ export default function ServiceThree() {
           <h3 className="max-w-xl text-4xl font-bold uppercase leading-[0.95] tracking-tight sm:text-5xl lg:text-7xl">
             {service.title}
           </h3>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-black/65 sm:text-lg dark:text-black/70">
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-[rgb(240,239,235)] sm:text-lg">
             {service.description}
           </p>
 
@@ -126,7 +126,7 @@ export default function ServiceThree() {
             {service.notes.map((note) => (
               <span
                 key={note}
-                className="service-note rounded-full border border-black/10 bg-white/55 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-black/60 backdrop-blur-sm dark:border-black/10 dark:bg-white/45 dark:text-black/65"
+                className="service-note rounded-full border border-black/10 bg-white/55 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[rgb(240,239,235)] backdrop-blur-sm dark:border-black/10 dark:bg-white/45"
               >
                 {note}
               </span>
@@ -141,7 +141,7 @@ export default function ServiceThree() {
                 <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#fbbc05] text-xs font-bold text-white">
                   3.{bulletIndex + 1}
                 </span>
-                <span className="text-sm leading-relaxed text-black/68 sm:text-base dark:text-black/72">
+                <span className="text-sm leading-relaxed text-[rgb(240,239,235)] sm:text-base">
                   {bullet}
                 </span>
               </li>

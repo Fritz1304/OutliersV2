@@ -38,7 +38,7 @@
     /* CONFIGURACION RAPIDA MODO OSCURO
        --page-bg-rgb: fondo verde/gris del modo oscuro.
     */
-    --page-bg-rgb: 150, 163, 166;
+    --page-bg-rgb: 0, 0, 0;
     --page-bg: rgb(var(--page-bg-rgb));
     --surface-rgb: 240, 239, 235;
     --surface-border-rgb: 0, 0, 0;
