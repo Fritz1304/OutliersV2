@@ -1,4 +1,4 @@
-//Esta Clase es para creaer la scena completa del drone en movimiento
+//Esta Clase es para crear la scena completa del drone en movimiento
 import { useRef, useState, Suspense } from "react"
 import { Canvas } from "@react-three/fiber"
 import { Environment, Float, ContactShadows } from "@react-three/drei"

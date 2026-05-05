@@ -1,0 +1,67 @@
+import { Text, Html, ContactShadows, PresentationControls, Float, Environment, useGLTF } from '@react-three/drei'
+
+export default function MacbookScene()
+{
+   const computer = useGLTF('https://threejs-journey.com/resources/models/macbook_model.gltf')
+   return <>
+
+        <color args={ [ 'rgb(0,0,0)' ] } attach="background" />
+
+        <Environment preset="city" />
+        
+        <PresentationControls
+            global
+            rotation={ [ 0.13, 0.1, 0 ] }
+            polar={ [ - 0.4, 0.2 ] }
+            azimuth={ [ - 1, 0.75 ] }
+            damping={ 0.1 }
+            snap
+        >
+            <Float rotationIntensity={ 0.4 } >  
+                <rectAreaLight
+                    width={ 2.5 }
+                    height={ 1.65 }
+                    intensity={ 65 }
+                    color={ '#ff6900' }
+                    rotation={ [ - 0.1, Math.PI, 0 ] }
+                    position={ [ 0, 0.55, - 1.15 ] }
+                />
+
+                <primitive
+                    object={ computer.scene }
+                    position-y={ - 1.2 }
+                    rotation-x={ 0.13 }
+                    scale={ 0.9 }
+                >
+                    <Html
+                        transform
+                        wrapperClass="htmlScreen"
+                        distanceFactor={ 1.17 }
+                        position={ [ 0.03, 1.1, - 1.4 ] }
+                        rotation-x={ - 0.256 }
+                    >
+                        <iframe src="https://bruno-simon.com/html/" />
+                    </Html>
+                </primitive>
+
+                <Text
+                    // font="./bangers-v20-latin-regular.woff"
+                    fontSize={ 0.2}
+                    position={ [ 0.7, 0.6, 0.75 ] }
+                    rotation-y={ - 1.25 }
+                    maxWidth={ 2 }
+                >
+                    Outliers
+                </Text>
+            </Float>
+        </PresentationControls>
+
+        <ContactShadows
+            position-y={ - 1.4 }
+            opacity={ 0.4 }
+            scale={ 5 }
+            blur={ 2.4 }
+        />
+
+    </>
+}

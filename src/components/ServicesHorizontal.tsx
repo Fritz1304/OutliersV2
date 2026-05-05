@@ -6,8 +6,6 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import type { Group } from 'three'
 import Drone from './Drone'
-import HoneyPot from './HoneyPot'
-import Bee from './Bee'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
@@ -113,32 +111,6 @@ function DroneRig() {
     </>
   )
 }
-
-function HoneyPotRig() {
-  const groupRef = useRef<Group>(null)
-
-  useFrame((state) => {
-    if (!groupRef.current) return
-
-    const time = state.clock.elapsedTime
-    groupRef.current.position.y = -0.45 + Math.sin(time * 0.9) * 0.06
-    groupRef.current.rotation.y = 0.35 + Math.sin(time * 0.5) * 0.24
-    groupRef.current.rotation.z = Math.sin(time * 0.8) * 0.03
-  })
-
-  return (
-    <>
-      <group ref={groupRef}>
-        <Float speed={1.7} rotationIntensity={0.14} floatIntensity={0.18}>
-          <HoneyPot />
-        </Float>
-        <Bee />
-      </group>
-      <ContactShadows position={[0, -1.75, 0]} opacity={0.22} scale={6.4} blur={2.1} far={4.2} />
-    </>
-  )
-}
-
 function ServiceCanvas({
   visual,
   style,
@@ -170,7 +142,7 @@ function ServiceCanvas({
         <directionalLight position={[5, 8, 5]} intensity={2.2} />
         <spotLight position={[-4, 6, 4]} intensity={1.25} angle={0.45} penumbra={0.8} />
         <Environment preset="city" />
-        {visual === 'drone' ? <DroneRig /> : <HoneyPotRig />}
+        {visual === 'drone' ? <DroneRig /> : null }
       </Canvas>
     </div>
   )

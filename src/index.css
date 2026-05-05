@@ -146,4 +146,22 @@
       rgb(var(--surface-rgb) / var(--glass-opacity-soft))
     );
   }
+
+.r3f
+{
+    touch-action: none;
+}
+
+.htmlScreen iframe
+{
+    width: 1060px;
+    height: 700px;
+    border: none;
+    border-radius: 20px;
+    background: #000000;
+}
+
+
+
+
 }
