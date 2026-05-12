@@ -71,13 +71,7 @@ export default function IntroLoader({ onIntroReady }: IntroLoaderProps) {
 
           const entranceTl = gsap.timeline({
             defaults: {
-              ease: "power3.out",
-            },
-            onComplete: () => {
-              if (!readyNotifiedRef.current) {
-                readyNotifiedRef.current = true;
-                onIntroReady?.();
-              }
+              ease: "power2.out",
             },
           });
 
@@ -85,36 +79,50 @@ export default function IntroLoader({ onIntroReady }: IntroLoaderProps) {
             autoAlpha: 1,
             scale: 1,
             duration: 1.2,
-            ease: "power2.out",
             clearProps: "transform,willChange",
           });
 
-          const tl = gsap.timeline({
+          const notifyReady = () => {
+            if (!readyNotifiedRef.current) {
+              readyNotifiedRef.current = true;
+              onIntroReady?.();
+            }
+          };
+
+          const scrollTl = gsap.timeline({
             scrollTrigger: {
               trigger: containerRef.current,
               start: "top top",
               end: `+=${INTRO_SCROLL_LENGTH}%`,
               pin: true,
-              pinSpacing: false,
+              pinSpacing: true,
               scrub: true,
               anticipatePin: 1,
               invalidateOnRefresh: true,
               refreshPriority: 3,
+              onUpdate: (self) => {
+                if (self.progress >= 0.999) {
+                  notifyReady();
+                }
+              },
+              onLeave: notifyReady,
             },
           });
 
-          tl.to(overlayGroupRef.current, {
-            scale: isDesktop ? 150 : 80,
-            ease: "power2.inOut",
-            force3D: true,
-          }).to(
-            whiteLayerRef.current,
-            {
-              opacity: 0,
-              ease: "power1.inOut",
-            },
-            "-=25%"
-          );
+          scrollTl
+            .to(overlayGroupRef.current, {
+              scale: isDesktop ? 150 : 80,
+              ease: "power2.inOut",
+              force3D: true,
+            })
+            .to(
+              whiteLayerRef.current,
+              {
+                opacity: 0,
+                ease: "power1.inOut",
+              },
+              "-=25%"
+            );
         }
       );
     }, containerRef);

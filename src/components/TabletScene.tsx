@@ -1,4 +1,4 @@
-import { Environment, Float, Html, useGLTF } from '@react-three/drei'
+import { PresentationControls,Environment, Float, Html, useGLTF } from '@react-three/drei'
 
 const OBJECT_SCALE = 0.5
 const screenConfig = {
@@ -16,21 +16,21 @@ export default function TabletScene() {
 
       <Environment preset="city" />
 
-      {/* <PresentationControls
+      <PresentationControls
         global
         rotation={[0, 0, 0]}
         polar={[-0.4, 0.2]}
         azimuth={[-1, 0.75]}
         damping={0.1}
         snap
-      > */}
+      >
         <Float rotationIntensity={0.2}>
           <primitive
             object={tablet.scene}
             scale={OBJECT_SCALE}
-            position={[0, -0.2, 0]}
-            rotation-x={-1.5}
-            rotation-z={0}
+            position={[0.5, -0.2, 0]}
+            rotation-x={-1.6}
+            rotation-z={-0.5}
           >
             <Html
               transform
@@ -40,7 +40,7 @@ export default function TabletScene() {
               position={screenConfig.position}
               rotation={screenConfig.rotation}
             >
-              <iframe
+              {/* <iframe
                 src={`${import.meta.env.BASE_URL}OU.pdf`}
                 title="Portfolio tablet preview"
                 style={{
@@ -49,13 +49,13 @@ export default function TabletScene() {
                   border: 0,
                   borderRadius: '20px',
                   background: '#000000',
-                }}
-              />
+                }} */}
+              {/* <iframe /> */}
             </Html>
           </primitive>
 
         </Float>
-      {/* </PresentationControls> */}
+      </PresentationControls>
     </>
   )
 }

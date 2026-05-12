@@ -29,9 +29,10 @@ export default function MacbookScene()
 
                 <primitive
                     object={ computer.scene }
-                    position-y={ - 1.2 }
-                    rotation-x={ 0.13 }
-                    scale={ 0.9 }
+                    position-y={ - 1.3 }
+                    position-x={ 0.4}
+                    rotation-x={ 0.15 }
+                    scale={ 1}
                 >
                     <Html
                         transform
@@ -40,7 +41,7 @@ export default function MacbookScene()
                         position={ [ 0.03, 1.1, - 1.4 ] }
                         rotation-x={ - 0.256 }
                     >
-                        <iframe src="https://bruno-simon.com/html/" />
+                        {/* <iframe src="https://bruno-simon.com/html/" /> */}
                     </Html>
                 </primitive>
 

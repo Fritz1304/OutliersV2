@@ -1,7 +1,7 @@
 import FlowerComponent from "./FlowerComponent"
-// import TabletScene from "./TabletScene"
-import MacbookScene from "./MacbookScene"
+// import MacbookScene from "./MacbookScene"
 import { Canvas } from "@react-three/fiber"
+import TabletScene from "./TabletScene"
 
 export default function PortFolio() {
     return (
@@ -28,7 +28,8 @@ export default function PortFolio() {
                             position: [ -3, 1.5, 4 ]
                         } }
                     >
-                        <MacbookScene />
+                        {/* <MacbookScene /> */}
+                        <TabletScene/>
                     </Canvas>
         </div>
         </section>
