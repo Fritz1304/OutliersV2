@@ -63,7 +63,7 @@ export default function TabletScene() {
                 AJUSTA SOLO ESTO
                 si quieres mover la pantalla
               */
-              position={[0, 1.94, 1.5]}
+              position={[0, 1.94, 1]}
               rotation={[Math.PI / 2, 0, 0]}
               style={{
                 width: "720px",
