@@ -1,18 +1,35 @@
-import { PresentationControls,Environment, Float, Html, useGLTF } from '@react-three/drei'
+import {
+  Environment,
+  Float,
+  Html,
+  PresentationControls,
+  useGLTF,
+} from "@react-three/drei"
 
-const OBJECT_SCALE = 0.5
-const screenConfig = {
-  position: [-0.6, 1.5, -0.69] as [number, number, number],
-  rotation: [-1.6, 0, 0] as [number, number, number],
-  distanceFactor: 1.17,
-}
+import { useThree } from "@react-three/fiber"
 
 export default function TabletScene() {
-  const tablet = useGLTF(`${import.meta.env.BASE_URL}models/Ipad.glb`)
+  const tablet = useGLTF(
+    `${import.meta.env.BASE_URL}models/Ipad.glb`
+  )
+
+  const { viewport } = useThree()
+
+  /*
+    Responsive REAL:
+    escalamos TODO el mundo 3D,
+    NO el iframe.
+  */
+  const scale =
+    viewport.width < 8
+      ? 0.28
+      : viewport.width < 12
+      ? 0.38
+      : 0.5
 
   return (
     <>
-      <color args={['rgb(138, 153, 157)']} attach="background" />
+      <color attach="background" args={["#8a999d"]} />
 
       <Environment preset="city" />
 
@@ -24,40 +41,64 @@ export default function TabletScene() {
         damping={0.1}
         snap
       >
-        <Float rotationIntensity={0.2}>
-          <primitive
-            object={tablet.scene}
-            scale={OBJECT_SCALE}
+        <Float rotationIntensity={0.15}>
+          {/* 
+            IMPORTANTE:
+            TODA la rotación va aquí.
+            Html y modelo comparten coordenadas.
+          */}
+          <group
+            scale={scale}
             position={[0.5, -0.2, 0]}
-            rotation-x={-1.6}
-            rotation-z={-0.5}
+            rotation={[-1.6, 0, -0.5]}
           >
+            {/* MODELO */}
+            <primitive object={tablet.scene} />
+
+            {/* PANTALLA */}
             <Html
               transform
-              scale={OBJECT_SCALE}
-              wrapperClass="htmlScreen"
-              distanceFactor={screenConfig.distanceFactor}
-              position={screenConfig.position}
-              rotation={screenConfig.rotation}
+              distanceFactor={3}
+              /*
+                AJUSTA SOLO ESTO
+                si quieres mover la pantalla
+              */
+              position={[0, 1.94, 1.5]}
+              rotation={[Math.PI / 2, 0, 0]}
+              style={{
+                width: "720px",
+                height: "460px",
+                pointerEvents: "auto",
+              }}
             >
-              {/* <iframe
-                src={`${import.meta.env.BASE_URL}OU.pdf`}
-                title="Portfolio tablet preview"
+              <div
                 style={{
-                  width: '1930px',
-                  height: '2520px',
-                  border: 0,
-                  borderRadius: '20px',
-                  background: '#000000',
-                }} */}
-              {/* <iframe /> */}
+                  width: "740px",
+                  height: "900px",
+                  overflow: "hidden",
+                  borderRadius: "32px"
+                }}
+              >
+                <iframe
+                  src="https://bruno-simon.com/html/"
+                  title="Tablet Screen"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    border: "none",
+                    display: "block",
+                    background: "white",
+                  }}
+                />
+              </div>
             </Html>
-          </primitive>
-
+          </group>
         </Float>
       </PresentationControls>
     </>
   )
 }
 
-useGLTF.preload(`${import.meta.env.BASE_URL}models/Ipad.glb`)
+useGLTF.preload(
+  `${import.meta.env.BASE_URL}models/Ipad.glb`
+)
